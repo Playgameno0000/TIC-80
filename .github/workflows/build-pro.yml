@@ -12,6 +12,8 @@ jobs:
       - name: Download source
         uses: actions/checkout@v4
         with:
+          repository: nesbox/TIC-80
+          ref: v1.4.1
           submodules: recursive
 
       - name: Setup MSYS2
