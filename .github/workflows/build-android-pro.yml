@@ -33,8 +33,8 @@ jobs:
       - name: Build TIC-80 PRO Android
         working-directory: build/android
         run: |
-          chmod +x gradle
-          ./gradle assembleRelease
+          chmod +x gradlew
+          ./gradlew assembleRelease
 
       - name: Upload TIC-80 PRO Android
         uses: actions/upload-artifact@v4
