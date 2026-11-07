@@ -22,8 +22,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
       - name: Install Android dependencies
         run: |
           sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
