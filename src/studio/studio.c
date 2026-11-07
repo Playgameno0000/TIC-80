@@ -1821,7 +1821,7 @@ static void initModules(Studio* studio)
 
     for(s32 i = 0; i < TIC_EDITOR_BANKS; i++)
     {
-        initSprite(studio->banks.sprite[i], &spriteDeps, &tic->cart.banks[i].tiles);
+        initSprite(studio->banks.sprite[i], &spriteDeps, &tic->cart.banks[i].tiles, &tic->cart.banks[i].palette);
         sprite_set_view(studio->banks.sprite[i], &studio->spriteView);
         initMap(studio->banks.map[i], &mapDeps, &tic->cart.banks[i].map);
         map_set_view(studio->banks.map[i], &studio->mapView);
@@ -2200,27 +2200,20 @@ void studioCodeViewToggle(Studio* studio, CodeViewOption option)
             break;
 
         case CodeViewLineNumbers:
-            // LINES with the sidebar hidden brings the sidebar back with them on
-            if(options->codeSidebar)
-                options->codeLineNumbers = !options->codeLineNumbers;
-            else
-                options->codeSidebar = options->codeLineNumbers = true;
+            options->codeLineNumbers = !options->codeLineNumbers;
 
-            code->lineNumbers = options->codeLineNumbers;
-            code->showGutter = options->codeSidebar;
+            // applyView owns the flags, so the change slides in.
             code->update(code);
             break;
 
         case CodeViewSidebar:
             options->codeSidebar = !options->codeSidebar;
 
-            code->showGutter = options->codeSidebar;
             code->update(code);
             break;
 
         case CodeViewStatusbar:
             options->codeStatusbar = !options->codeStatusbar;
-            code->showStatusbar = options->codeStatusbar;
             code->update(code);
             break;
 
@@ -3779,8 +3772,12 @@ Studio* studio_create(s32 argc, char** argv, s32 samplerate, tic80_pixel_color_f
 #endif
 
     studio->config->data.options.fullscreen |= args.fullscreen;
+#if !defined(VSYNC_ALWAYS_ON)
     studio->config->data.options.vsync |= args.vsync;
+#endif
+#if !defined(BUILD_SOKOL)
     studio->config->data.soft |= args.soft;
+#endif
     studio->config->data.cli |= args.cli;
 
 #if defined(BUILD_EDITORS)
