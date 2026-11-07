@@ -1,3 +1,9 @@
+name: Build TIC-80 PRO Android
+
+on:
+  workflow_dispatch:
+
+jobs:
   build-android:
     runs-on: ubuntu-22.04
 
