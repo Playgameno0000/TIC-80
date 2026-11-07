@@ -1,0 +1,37 @@
+  build-android:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download source
+        uses: actions/checkout@v4
+        with:
+          repository: nesbox/TIC-80
+          ref: v1.4.1
+          submodules: recursive
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android dependencies
+        run: |
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+          yes | sdkmanager --licenses
+
+      - name: Build TIC-80 PRO Android
+        working-directory: build/android
+        run: |
+          chmod +x gradle
+          ./gradle assembleRelease
+
+      - name: Upload TIC-80 PRO Android
+        uses: actions/upload-artifact@v4
+        with:
+          name: TIC-80-PRO-Android
+          path: build/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
