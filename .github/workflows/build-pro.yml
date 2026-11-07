@@ -40,5 +40,8 @@ jobs:
         run: cmake --build build --config Release --parallel 2
 
       - name: Upload TIC-80 PRO
-
-      
+        uses: actions/upload-artifact@v4
+        with:
+          name: TIC-80-PRO-Windows-x64
+          path: build/bin/
+          if-no-files-found: error
